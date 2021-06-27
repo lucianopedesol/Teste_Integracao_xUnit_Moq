@@ -21,6 +21,7 @@ namespace Alura.LeilaoOnline.ConsoleApp
             }
             Console.ForegroundColor = cor;
         }
+
         private static void LeilaoComVariosLances()
         {
             //Arranje - cenário
