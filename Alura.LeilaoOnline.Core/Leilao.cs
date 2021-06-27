@@ -13,6 +13,7 @@ namespace Alura.LeilaoOnline.Core
     }
     public class Leilao
     {
+        private Interessada _ultimoCliente;
         private IList<Lance> _lances;
         public IEnumerable<Lance> Lances => _lances;
         public string Peca { get; }
@@ -26,11 +27,18 @@ namespace Alura.LeilaoOnline.Core
             Estado = EstadoLeilao.LeilaoEmAndamento;
         }
 
+        private bool NovoLanceEhAceito(Interessada cliente, double valor)
+        {
+            return (Estado == EstadoLeilao.LeilaoEmAndamento) && (cliente != _ultimoCliente);
+        }
+
         public void RecebeLance(Interessada cliente, double valor)
         {
-            if(Estado == EstadoLeilao.LeilaoEmAndamento)
+            if (NovoLanceEhAceito(cliente, valor))
             {
                 _lances.Add(new Lance(cliente, valor));
+                _ultimoCliente = cliente;
+
             }
         }
 
@@ -43,7 +51,7 @@ namespace Alura.LeilaoOnline.Core
         {
             Ganhador = Lances
                 .DefaultIfEmpty(new Lance(null, 0))
-                .OrderBy(e=> e.Valor)
+                .OrderBy(e => e.Valor)
                 .LastOrDefault();
             Estado = EstadoLeilao.LeilãoFinalizado;
         }
